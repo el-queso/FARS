@@ -154,6 +154,8 @@ finalize(){ \
 	dialog --title "All done!" --msgbox "Congrats! Provided there were no hidden errors, the script completed successfully and all the programs and configuration files should be in place.
     To run the new graphical environment, log out and log back in as your new user.
     .t Wizard x Fanky" 12 80
+	interface=$(basename -a /sys/class/net/* | grep enp* | head -n 1)
+	echo -e "[Match]\nName=$interface\n\n[Network]\nDHCP=yes"
 	systemctl enable systemd-networkd systemd-resolved lightdm
 	}
 
