@@ -1,5 +1,5 @@
 #!/bin/sh
-# Wizard's Auto-Rice Script (WARS)
+# Wizard x Fanky's Auto-Rice Script (FARS)
 
 ### OPTIONS AND VARIABLES ###
 
@@ -18,7 +18,7 @@ while getopts ":a:r:b:p:h" o; do case "${o}" in
 esac done
 
 [ -z "$dotfilesrepo" ] && dotfilesrepo="https://github.com/el-queso/dotfiles"
-[ -z "$pkglist" ] && pkglist="https://raw.githubusercontent.com/WizardAlfredo/WARS/pc-retro/pkglist.csv"
+[ -z "$pkglist" ] && pkglist="https://raw.githubusercontent.com/el-queso/FARS/pc-fanky/pkglist.csv"
 [ -z "$aurhelper" ] && aurhelper="paru"
 [ -z "$repobranch" ] && repobranch="main"
 
@@ -29,9 +29,9 @@ installpkg(){ pacman --noconfirm --needed -S "$1" >/dev/null 2>&1 ;}
 error() { printf "%s\n" "$1" >&2; exit 1; }
 
 welcomemsg() { \
-	dialog --title "Welcome!" --msgbox "Welcome to Wizard's Auto-Rice Script!
+	dialog --title "Welcome!" --msgbox "Welcome to Wizard x Fanky's Auto-Rice Script!
     This script will automatically install a fully-featured Linux desktop, which I use as my main machine.
-    -Wizard" 10 60
+    -Wizard x Fanky" 10 60
 
 	dialog --colors --title "Important Note!" --yes-label "All ready!" --no-label "Return..." --yesno "Be sure the computer you are using has current pacman updates and refreshed Arch keyrings.
     If it does not, the installation of some programs might fail." 8 70
@@ -54,9 +54,9 @@ getuserandpass() { \
 
 usercheck() { \
 	! { id -u "$name" >/dev/null 2>&1; } ||
-	dialog --colors --title "WARNING!" --yes-label "CONTINUE" --no-label "No wait..." --yesno "The user \`$name\` already exists on this system. WARS can install for a user already existing, but it will \\Zboverwrite\\Zn any conflicting settings/dotfiles on the user account.
-    WARS will \\Zbnot\\Zn overwrite your user files, documents, videos, etc., so don't worry about that, but only click <CONTINUE> if you don't mind your settings being overwritten.
-    Note also that WARS will change $name's password to the one you just gave." 14 70
+	dialog --colors --title "WARNING!" --yes-label "CONTINUE" --no-label "No wait..." --yesno "The user \`$name\` already exists on this system. FARS can install for a user already existing, but it will \\Zboverwrite\\Zn any conflicting settings/dotfiles on the user account.
+    FARS will \\Zbnot\\Zn overwrite your user files, documents, videos, etc., so don't worry about that, but only click <CONTINUE> if you don't mind your settings being overwritten.
+    Note also that FARS will change $name's password to the one you just gave." 14 70
 	}
 
 preinstallmsg() { \
@@ -80,8 +80,8 @@ refreshkeys() {
 
 ### WARNING ###
 newperms() { # Set special sudoers settings for install (or after).
-	sed -i "/#WARS/d" /etc/sudoers
-	echo "$* #WARS" >> /etc/sudoers ;}
+	sed -i "/#FARS/d" /etc/sudoers
+	echo "$* #FARS" >> /etc/sudoers ;}
 
 manualinstall() { # Installs $1 manually. Used only for AUR helper here.
 	# Should be run after repodir is created and var is set.
@@ -94,14 +94,14 @@ manualinstall() { # Installs $1 manually. Used only for AUR helper here.
 }
 
 maininstall() { # Installs all needed programs from main repo.
-	dialog --title "WARS Installation" --infobox "Installing \`$1\` ($n of $total). $1 $2" 5 70
+	dialog --title "FARS Installation" --infobox "Installing \`$1\` ($n of $total). $1 $2" 5 70
 	installpkg "$1"
 	}
 
 gitmakeinstall() {
 	progname="$(basename "$1" .git)"
 	dir="$repodir/$progname"
-	dialog --title "WARS Installation" --infobox "Installing \`$progname\` ($n of $total) via \`git\` and \`make\`. $(basename "$1") $2" 5 70
+	dialog --title "FARS Installation" --infobox "Installing \`$progname\` ($n of $total) via \`git\` and \`make\`. $(basename "$1") $2" 5 70
 	sudo -u "$name" git clone --depth 1 "$1" "$dir" >/dev/null 2>&1 || { cd "$dir" || return 1 ; sudo -u "$name" git pull --force origin main;}
 	cd "$dir" || exit 1
 	make >/dev/null 2>&1
@@ -109,13 +109,13 @@ gitmakeinstall() {
 	cd /tmp || return 1 ;}
 
 aurinstall() { \
-	dialog --title "WARS Installation" --infobox "Installing \`$1\` ($n of $total) from the AUR. $1 $2" 5 70
+	dialog --title "FARS Installation" --infobox "Installing \`$1\` ($n of $total) from the AUR. $1 $2" 5 70
 	echo "$aurinstalled" | grep -q "^$1$" && return 1
 	sudo -u "$name" $aurhelper -S --noconfirm "$1" >/dev/null 2>&1
 	}
 
 pipinstall() { \
-	dialog --title "WARS Installation" --infobox "Installing the Python package \`$1\` ($n of $total). $1 $2" 5 70
+	dialog --title "FARS Installation" --infobox "Installing the Python package \`$1\` ($n of $total). $1 $2" 5 70
 	[ -x "$(command -v "pip")" ] || installpkg python-pip >/dev/null 2>&1
 	yes | pip install "$1"
 	}
@@ -150,11 +150,11 @@ systembeepoff() { dialog --infobox "Getting rid of that retarded error beep soun
 	echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf ;}
 
 finalize(){ \
-	systemctl enable lightdm
 	dialog --infobox "Preparing welcome message..." 4 50
 	dialog --title "All done!" --msgbox "Congrats! Provided there were no hidden errors, the script completed successfully and all the programs and configuration files should be in place.
-    To run the new graphical environment, log out and log back in as your new user, then run the command \"startx\" to start the graphical environment (it will start automatically in tty1).
-    .t Wizard" 12 80
+    To run the new graphical environment, log out and log back in as your new user.
+    .t Wizard x Fanky" 12 80
+	systemctl enable systemd-networkd systemd-resolved lightdm
 	}
 
 ### THE ACTUAL SCRIPT ###
@@ -182,11 +182,11 @@ preinstallmsg || error "User exited."
 refreshkeys || error "Error automatically refreshing Arch keyring. Consider doing so manually."
 
 for x in curl ca-certificates base-devel git ntp zsh ; do
-	dialog --title "WARS Installation" --infobox "Installing \`$x\` which is required to install and configure other programs." 5 70
+	dialog --title "FARS Installation" --infobox "Installing \`$x\` which is required to install and configure other programs." 5 70
 	installpkg "$x"
 done
 
-dialog --title "WARS Installation" --infobox "Synchronizing system time to ensure successful and secure installation of software..." 4 70
+dialog --title "FARS Installation" --infobox "Synchronizing system time to ensure successful and secure installation of software..." 4 70
 
 ntpdate 0.gr.pool.ntp.org >/dev/null 2>&1
 
@@ -246,9 +246,16 @@ grep -q "OTHER_OPTS='-a pulseaudio -m alsa_seq -r 48000'" /etc/conf.d/fluidsynth
 # Start/restart PulseAudio.
 pkill -15 -x 'pulseaudio'; sudo -u "$name" pulseaudio --start
 
+# Download  wordlists
+mkdir -p /opt/wordlists/
+curl -s "https://gitlab.com/kalilinux/packages/wordlists/-/raw/kali/master/rockyou.txt.gz" -o /opt/wordlists/rockyou.txt.gz
+gunzip /opt/wordlists/rockyou.txt.gz
+curl -s "https://raw.githubusercontent.com/daviddias/node-dirbuster/master/lists/directory-list-2.3-medium.txt" -o /opt/wordlists/directory-list-2.3-medium.txt
+git clone "https://github.com/danielmiessler/SecLists.git" /opt/wordlists/SecLists
+
 # This line, overwriting the `newperms` command above will allow the user to run
 # serveral important commands, `shutdown`, `reboot`, updating, etc. without a password.
-newperms "%wheel ALL=(ALL) ALL #WARS
+newperms "%wheel ALL=(ALL) ALL #FARS
 %wheel ALL=(ALL) NOPASSWD: /usr/bin/shutdown,/usr/bin/reboot,/usr/bin/systemctl suspend,/usr/bin/wifi-menu,/usr/bin/mount,/usr/bin/umount,/usr/bin/pacman -Syu,/usr/bin/pacman -Syyu,/usr/bin/packer -Syu,/usr/bin/packer -Syyu,/usr/bin/systemctl restart NetworkManager,/usr/bin/rc-service NetworkManager restart,/usr/bin/pacman -Syyu --noconfirm,/usr/bin/loadkeys,/usr/bin/paru,/usr/bin/pacman -Syyuw --noconfirm"
 
 # Last message! Install complete!
