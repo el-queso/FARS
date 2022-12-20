@@ -74,7 +74,6 @@ A,openrgb,                  "is a flexible RGB hardware abstraction layer librar
 ,terminus-font,             "Fonts :)"
 ,ttf-font-awesome,          "Fonts :)"
 ,docker,                    "A set of platform as a service products that use OS-level virtualization to deliver software in packages called containers."
-,discord,                   "Talk over voice, video, and text. Talk, chat, hang out, and stay close with your friends and communities."
 ,keepassxc,                 "Open source password manager"
 ,arandr,                    "Another XRandR GUI"
 A,feroxbuster,              "A fast, simple, recursive content discovery tool written in Rust."
