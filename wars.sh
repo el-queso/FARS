@@ -216,8 +216,8 @@ installationloop
 
 # Install the dotfiles in the user's home directory
 putgitrepo "$dotfilesrepo" "/home/$name" "$repobranch"
-rm -rf "/home/$name/README.md" "/home/$name/assets/" "/home/$name/.git"
-git update-index --assume-unchanged "/home/$name/README.md" "/home/$name/assets/"
+rm -rf "/home/$name/README.md" "/home/$name/.git"
+git update-index --assume-unchanged "/home/$name/README.md"
 
 # Most important command! Get rid of the beep!
 systembeepoff
